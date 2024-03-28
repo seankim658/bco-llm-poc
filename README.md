@@ -4,7 +4,8 @@
 - [Contraints](#contraints)
 - [Tech Stack](#tech-stack)
     - [LlamaIndex](#llamaindex)
-- [Workflow](#workflow)
+    - [Streamlit](#streamlit)
+- [Overview and Usage](#overview-and-usage)
 
 ---
 
@@ -35,4 +36,50 @@ Retrieval augmented generation can help to address both of these issues. By allo
 
 ### LlamaIndex
 
-## Workflow 
+At the core of this proof of concept is the [LlamaIndex](https://github.com/run-llama/llama_index) library. LlamaIndex is a data framework designed for LLM based applications. It helps to ingest, structure, and access private or domain-specific data. LlamaIndex does a lot of the heavy lifting in solving our core issues raised above. Additionally, LlamaIndex provides a great deal of flexibility and abstraction depending on how custom you want your RAG pipeline to be. Right now, we are using LlamaIndex as is, essentially just out of the box. Even with an almost purely stock configuration, we are still getting impressive results, making it even more promising for when we hone and configure it further. 
+
+LlamaIndex has a few key concepts/tools that each have a variety of levels of customization depending on how finely tuned you want your RAG pipeline to be for your application.  
+
+First is the data loader (or reader), LlamaIndex offers some standard readers out of the box but where LlamaIndex really shines is its huge open source collection of community created data loaders at [LlamaHub](https://llamahub.ai/?tab=readers). Data loaders handle the data ingestion and formatting into Document objects and the subsequent Nodes. Documents and Nodes are key abstractions in LlamaIndex. At a high level, a Document is a generic container for any data source. By default, Documents store the text (and/or images) from the data source, a dictionary of annotations containing the metadata, and a dictionary of relationships to the other Documents/Nodes. At a high level, a Node represents a "chunk" of a source Document. The creation of Nodes is where the custom data loaders can offer big performance improvements. The way the source data is chunked and split prior to the indexing process can have a large effect on the performance of the application in terms of both accuracy and relevance of the results returned. 
+
+The next concept is the indexing process. The most important part of the indexing process is the embedding step. During this step, the text of each Node is turned into a vector embedding. This step converts the semantics or meaning of your text into a numerical representation. This is what allows for semantic search, allowing the system to locate text that is related to the meaning of the query terms rather than just matching words.
+
+After embedding has been completed, engines are used to access the emdbedded vectors.
+
+These concepts form the high level abstraction that LlamaIndex provides for building powerful RAG applications.
+
+### Streamlit
+
+To quickly spin up a debugging/prototyping front end interface, streamlit was used. Streamlit is an open-source Python library that siplifies the process of creating and sharing web apps for machine learning and data science. The main reason for using streamlit was the simplicity and the ability for rapid prototyping. By only needing pure Python, there is no need to work with other dependencies and languages. A proper Typescript front end is probably more production ready, by streamlit for quick prototyping was ideal to reduce development overhead. 
+
+## Overview and Usage 
+
+The application is written in a way that you should be able to easily switch out both the embedding and LLM models if you would prefer to use locally hosted models for cost or other reasons. However, the default configuration uses the OpenAI `text-embedding-3-small` embedding model and the `gpt-4-0125-preview` LLM model.
+
+To start the application, you'll have to create your .env file and save your OpenAI API key (if you are using a locally hosted or different API model for embedding and the LLM this step can be skipped or changed as needed). For example: 
+
+```.env
+OPENAI_API_KEY=<KEY>
+```
+
+The application automatically stores the PDF file you upload locally in your project. Make sure you have a `data/` directory within your project's root. 
+
+Next, you can start the streamlit application (from within the project's root directory) using: 
+
+```bash
+streamlit run main.py
+```
+
+The load up UI will look like this: 
+
+![Boot up UI](./imgs/ui_overview.png)
+
+Note that the cost estimators will default to be collapsed except for the specific models you are using. You can still expand the collapsed cost estimators but the estimations will likely be a little off. Each model uses a different tokenizer, and depending on the embedding models used the cost estimation formula's can differ. However, these should still give you a solid estimation of the cost for different actions. 
+
+After you choose a PDF file to upload, you should press the `Index PDF` button as shown below. This button will kick off the indexing and embedding of your uploaded file. 
+
+![PDF Upload Step](./imgs/upload_step.png)
+
+Once your PDF is properly indexed, you will see the interaction buttons where you can start generating your BioCompute Objects domains! 
+
+![Domain Generation Step](./imgs/domain_step.png)
