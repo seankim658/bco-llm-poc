@@ -3,3 +3,4 @@ env/
 data/
 .mypy_cache/
 mypy.ini
+__pycache__/
