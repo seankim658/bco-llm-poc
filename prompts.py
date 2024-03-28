@@ -366,3 +366,75 @@ and running applications in a dependent environment. The JSON schema is as follo
     }
 }
 """
+
+PARAMETRIC_DOMAIN = """The parametric domain represents a list of parameters customizing the computational flow which can affect the output of the calculations. These fields can be custom to each kind of analysis andn are tied to a particular pipeline implementation. This domain as a whole is optional so if there is no information in the paper that fits this domain then you can indicate that to the user. The JSON schema is as follows:
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://w3id.org/ieee/ieee-2791-schema/parametric_domain.json",
+    "type": "array",
+    "title": "Parametric Domain",
+    "description": "This represents the list of NON-default parameters customizing the computational flow which can affect the output of the calculations. These fields can be custom to each kind of analysis and are tied to a particular pipeline implementation",
+    "items":{
+        "required": [
+            "param",
+            "value",
+            "step"
+        ],
+        "additionalProperties": false,
+        "properties": {
+            "param": {
+                "type": "string",
+                "title": "param",
+                "description": "Specific variables for the computational workflow",
+                "examples": [
+                    "seed"
+                ]
+            },
+            "value": {
+                "type": "string",
+                "description": "Specific (non-default) parameter values for the computational workflow",
+                "title": "value",
+                "examples": [
+                    "14"
+                ]
+            },
+            "step": {
+                "type": "string",
+                "title": "step",
+                "description": "Refers to the specific step of the workflow relevant to the parameters specified in 'param' and 'value'",
+                "examples": [
+                    "1"
+                ],
+                "pattern": "^(.*)$"
+            }
+        }
+    }
+}
+"""
+
+ERROR_DOMAIN = """The error domain can be used to determine what range of input returns and outputs are within the tolerance level defined in this subdomain and therefore can be used to optimize the algorithm. It consists of two subdomains: empirical and algorithmic. The empirical error subdomain contains empirically determined values such as limits of detectability, false positives, false negatives, statistical confidence of outcomes, etc. The algorithmic subdomain is descriptive of errors that originate by the fuzziness of the algorithms. This domain as a whole is optional so if there is no information in the paper that fits this domain then you can indicate that to the user. The JSON schema is as follows:
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://w3id.org/2791/error_domain.json",
+    "type": "object",
+    "title": "Error Domain",
+    "description": "Fields in the Error Domain are open-ended and not restricted nor defined by the IEEE-2791 standard. It is RECOMMENDED that the keys directly under empirical_error and algorithmic_error use a full URI. Resolving the URI SHOULD give a JSON Schema or textual definition of the field. Other keys are not allowed error_domain",
+    "additionalProperties": false,
+    "required": [
+        "empirical_error",
+        "algorithmic_error"
+    ],
+    "properties": {
+        "empirical_error": {
+            "type": "object",
+            "title": "Empirical Error",
+            "description": "empirically determined values such as limits of detectability, false positives, false negatives, statistical confidence of outcomes, etc. This can be measured by running the algorithm on multiple data samples of the usability domain or through the use of carefully designed in-silico data."
+        },
+        "algorithmic_error": {
+            "type": "object",
+            "title": "Algorithmic Error",
+            "description": "descriptive of errors that originate by fuzziness of the algorithms, driven by stochastic processes, in dynamically parallelized multi-threaded executions, or in machine learning methodologies where the state of the machine can affect the outcome."
+        }
+    }
+}
+"""
