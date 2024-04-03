@@ -19,12 +19,14 @@ load_dotenv()
 save_directory = "./data/"
 
 token_counts = {"embedding": 0, "input": 0, "output": 0, "total": 0}
+model_choices = ["gpt-3.5-turbo", "gpt-4-turbo-preview", "gpt-4"]
+llm_model_name = model_choices[1]
+
 token_counter = TokenCountingHandler(
-    tokenizer=tiktoken.encoding_for_model("gpt-4-turbo-preview").encode
+    tokenizer=tiktoken.encoding_for_model(llm_model_name).encode
 )
 embed_model_name = "text-embedding-3-small"
 embed_model = OpenAIEmbedding(model=embed_model_name)
-llm_model_name = "gpt-4-turbo-preview"
 Settings.llm = OpenAI(model=llm_model_name)
 Settings.callback_manager = CallbackManager([token_counter])
 Settings.embed_model = embed_model
@@ -52,7 +54,7 @@ if "index" not in st.session_state:
 
 model_cost_information = {
     "llm": {
-        "gpt-3.5": {
+        "gpt-3.5-turbo": {
             "input_token_cost_multiplier": 0.00005,
             "output_token_cost_multiplier": 0.00015,
         },
@@ -71,7 +73,6 @@ model_cost_information = {
         "ada-v2": 0.00010,
     },
 }
-
 
 def sidebar():
 
@@ -241,7 +242,12 @@ def perform_query(domain: str):
     else:
         return
 
-    response += str(query_response)
+    str_query_response = str(query_response)
+    if not str_query_response.startswith("```json"):
+        str_query_response = "```json\n" + str_query_response + "\n```"
+    response += str(str_query_response)
+    print("Response:")
+    print(response)
 
     if "messages" not in st.session_state:
         st.session_state["messages"] = []
@@ -261,7 +267,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# print(response)
-# print(f"embedding: {token_counts['embedding']}\ninput: {token_counts['input']}\noutput: {token_counts['output']}\ntotal: {token_counts['total']}")
-# token_counter.reset_counts()
