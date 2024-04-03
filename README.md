@@ -50,13 +50,13 @@ These concepts form the high level abstraction that LlamaIndex provides for buil
 
 ### Streamlit
 
-To quickly spin up a debugging/prototyping front end interface, streamlit was used. Streamlit is an open-source Python library that siplifies the process of creating and sharing web apps for machine learning and data science. The main reason for using streamlit was the simplicity and the ability for rapid prototyping. By only needing pure Python, there is no need to work with other dependencies and languages. A proper Typescript front end is probably more production ready, by streamlit for quick prototyping was ideal to reduce development overhead. 
+To quickly spin up a debugging/prototyping front end interface, streamlit was used. Streamlit is an open-source Python library that siplifies the process of creating and sharing web apps for machine learning and data science. The main reason for using streamlit was the simplicity and the ability for rapid prototyping. By only needing pure Python, there is no need to work with other dependencies and languages. A proper Typescript front end is definitely more production ready, but streamlit for quick prototyping was ideal to reduce development overhead. 
 
 ## Overview and Usage 
 
 The application is written in a way that you should be able to easily switch out both the embedding and LLM models if you would prefer to use locally hosted models for cost or other reasons. However, the default configuration uses the OpenAI `text-embedding-3-small` embedding model and the `gpt-4-0125-preview` LLM model.
 
-To start the application, you'll have to create your .env file and save your OpenAI API key (if you are using a locally hosted or different API model for embedding and the LLM this step can be skipped or changed as needed). For example: 
+To start the application, you'll have to create your `.env` file and save your OpenAI API key (if you are using a locally hosted or different API model for embedding and the LLM this step can be skipped or changed as needed). For example: 
 
 ```.env
 OPENAI_API_KEY=<KEY>
