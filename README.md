@@ -1,5 +1,7 @@
 # BCO LLM Proof of Concept
 
+**NOTE:** Work on this has moved to [here](https://github.com/biocompute-objects/biocompute-object-llm). This repository will no longer be updated. 
+
 - [Approach Justification and Background](#approach-justification-and-background)
 - [Contraints](#contraints)
 - [Tech Stack](#tech-stack)
